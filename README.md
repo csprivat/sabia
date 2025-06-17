@@ -1,69 +1,131 @@
-# Conversational RAG Web Interface with Streamlit
+# 🌿 SABIÁ — Sistema de Assistência Baseado em IA com Arquivos
 
-This repository contains a conversational Retrieval-Augmented Generation (RAG) web interface developed with Streamlit. The interface allows users to interact with a RAG model by selecting local folders containing data and models for summarization and answering.
+**SABIÁ** é um sistema RAG (*Retrieval-Augmented Generation*) que integra IA generativa local com arquivos documentais. O projeto permite consultas em linguagem natural sobre documentos PDF armazenados localmente, preservando a privacidade e operando sem dependência de nuvem.
 
-<p style="center">
-  <img src="./assets/web_interface.png" alt="Web Interface of a RAG application">
-</p>
+Ideal para pesquisadores, arquivos institucionais e laboratórios de humanidades digitais.
 
-## Features
+---
 
-- **Data Selection:** Users can select the local folder containing the data for RAG.
-- **Model Selection:** Users can choose models for chat history summarization and answering.
-- **Embedding Creation:** Embeddings are created using the `e5-small-v2` model and cached for faster inference.
-- **Vector Index:** FAISS is used as the vector index.
-- **HTML Processing:** Inputs are .HTML pages (a sample Star Wars dataset is included). Two chunkers are used: `HTMLSplitter` first and `Recursive Character Splitter` after.
-- **LLM Processing:** 
-  - One LLM rephrases the history to formulate a unique query that is understandable without the whole chat history.
-  - Another LLM answers the query given the rephrased query and the context retrieved from the vector store.
+## 🔍 Funcionalidades
 
-## How to run this repository
+- 📂 **Indexação de PDFs locais**  
+  Carrega e processa arquivos PDF para extração de conteúdo textual.
 
-#### Clone the repository
-First, you need to clone the repository on your local machine and move into the folder.
-From terminal, run:
+- 🧠 **Geração de respostas com IA**  
+  Utiliza modelos de linguagem baseados em arquitetura LLaMA para responder perguntas de forma contextualizada.
+
+- 📊 **Banco vetorial com ChromaDB**  
+  Armazena embeddings gerados para recuperação semântica eficiente.
+
+- 💬 **Interface interativa com Streamlit**  
+  Interface web leve e acessível para interação com o sistema.
+
+- 🔒 **Execução 100% local**  
+  Todos os dados e modelos são processados localmente, sem enviar nada para a nuvem.
+
+---
+
+## 🧰 Tecnologias utilizadas
+
+- Python 3.11+
+- [llama-cpp-python](https://github.com/abetlen/llama-cpp-python)
+- [ChromaDB](https://www.trychroma.com/)
+- [Sentence-Transformers](https://www.sbert.net/)
+- Streamlit
+
+---
+
+## ⚙️ Instalação
+
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/usuario/sabia.git
+   cd sabia
+   ```
+
+2. **Crie e ative um ambiente virtual**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
+   ```
+
+3. **Instale as dependências**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure o arquivo `.env`**
+   Crie um arquivo `.env` com os seguintes parâmetros:
+   ```
+   MODEL_PATH=models/llm/model.gguf
+   CHROMA_DB_DIR=embeddings/chromadb
+   DATA_PATH=data/processed
+   ```
+
+5. **Adicione seus PDFs em `data/raw/`**
+
+6. **Execute o pipeline**
+   ```bash
+   python src/load_data.py
+   python src/embed_data.py
+   python src/build_chroma.py
+   ```
+
+7. **Inicie a interface**
+   ```bash
+   streamlit run app.py
+   ```
+
+---
+
+## 📁 Estrutura do projeto
+
 ```
-git clone https://github.com/AlbertoFormaggio1/conversational_rag_web_interface.git
-cd conversational_rag_web_interface
-```
-#### Install the dependencies in your virtual environment
-To execute this environment you need to install the requirements provided in the requirements.txt file.
-To install them with Python Virtual Environment, run 
-```
-pip install -r requirements.txt
-```
-
-#### Ollama installation
-This project uses Ollama for managing the models.
-You can install ollama from here: https://ollama.com/download
-The models can be retrieved by running on your terminal:
-```
-ollama pull "model name"
-```
-
-A list of available models can be retrieved at:
-https://ollama.com/library
-When opening the page of a model, please open the drop-down menu and select a *quantized models* (smaller and faster) that were fine-tuned on instructions (with *instruct* in their name).
-From experience, models quantized with Q_4_K_M are a good compromise between quality and speed if you're running your model on a device without GPU.
-
-<p style="center">
-  <img src="./assets/ollama_model.png" alt="How to select a model with Ollama">
-</p>
-
-#### Running the Application
-1. Open the virtual environment with the installed packages.
-2. From the project folder, run the following command:
-```
-streamlit run app.py
+sabia/
+├── data/
+│   ├── raw/                 # PDFs originais
+│   └── processed/           # Textos extraídos
+├── embeddings/
+│   └── chromadb/            # Banco vetorial
+├── models/
+│   └── llm/                 # Modelo .gguf local
+├── src/
+│   ├── load_data.py         # Pré-processamento dos PDFs
+│   ├── embed_data.py        # Geração de embeddings
+│   ├── build_chroma.py      # Criação do ChromaDB
+│   ├── query_rag.py         # Função principal de consulta
+│   └── utils.py             # Funções auxiliares
+├── app.py                   # Interface Streamlit
+├── requirements.txt
+├── README.md
+└── .env.example
 ```
 
-#### Usage
-1. Select the local folder containing the data for RAG.
-2. Choose the models for summarization and answering.
-3. The interface will process the inputs and provide responses based on the selected models and data.
+---
 
-Before running queries, you need to fill the sidebar on the left! Otherwise, an error will be raised.
+## 🚧 Em desenvolvimento
 
+- Suporte a mais formatos além de PDF
+- Upload de arquivos via interface
+- Cache de perguntas/respostas
+- Melhorias de desempenho e otimização de memória
 
-#### Sample Dataset
-A sample Star Wars dataset is attached to the repository for testing purposes. For more information, look at [this repo](https://github.com/AlbertoFormaggio1/star_wars_unstructured_dataset).
+---
+
+## 📜 Licença
+
+Este projeto está licenciado sob a [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html).  
+Sinta-se livre para usar, modificar e redistribuir conforme os termos da licença.
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Para sugerir melhorias, abrir issues ou enviar pull requests, siga as diretrizes no arquivo `CONTRIBUTING.md` (em breve).
+
+---
+
+## ✨ Nome do projeto
+
+**SABIÁ** homenageia o pássaro símbolo do Brasil e reflete a ideia de um assistente que canta conhecimento ao ser provocado — um mensageiro inteligente entre documentos e pessoas.

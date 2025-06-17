@@ -226,3 +226,48 @@ def create_qa_RAG_chain(llm_pipeline, retriever, system_prompt):
     chain = create_retrieval_chain(retriever, qa_chain)
 
     return chain
+
+
+import os
+from langchain_community.vectorstores import FAISS
+from langchain.embeddings import CacheBackedEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.storage import LocalFileStore
+
+def build_or_load_vectorstore(documents, vectorstore_path="data/faiss_index"):
+    if os.path.exists(vectorstore_path):
+        print(f"🔁 Carregando vetorstore existente de: {vectorstore_path}")
+        return FAISS.load_local(vectorstore_path, embeddings, allow_dangerous_deserialization=True)
+    else:
+        print(f"⚙️ Construindo novo vetorstore em: {vectorstore_path}")
+        return FAISS.from_documents(documents, embeddings)
+
+# Inicializa embedding com cache local
+embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
+store = LocalFileStore("data/embedding_cache/")
+base_embeddings = HuggingFaceEmbeddings(model_name=embedding_model_name)
+embeddings = CacheBackedEmbeddings.from_bytes_store(base_embeddings, store)
+
+
+
+import os
+from langchain_community.vectorstores import FAISS
+from langchain.embeddings import CacheBackedEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.storage import LocalFileStore
+
+def prepare_vectorstore(docs, persist_path="vectorstore/faiss_index"):
+    if os.path.exists(persist_path):
+        print(f"🔁 Carregando índice FAISS de {persist_path}")
+        db = FAISS.load_local(persist_path, embeddings, allow_dangerous_deserialization=True)
+    else:
+        print(f"⚙️ Construindo novo índice FAISS em {persist_path}")
+        db = FAISS.from_documents(docs, embeddings)
+        db.save_local(persist_path)
+    return db
+
+# Configura embedding com cache local
+embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
+store = LocalFileStore("cache/")
+embedder = HuggingFaceEmbeddings(model_name=embedding_model_name)
+embeddings = CacheBackedEmbeddings.from_bytes_store(embedder, store)
