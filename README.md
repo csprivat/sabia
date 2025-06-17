@@ -79,31 +79,6 @@ Ideal para pesquisadores, arquivos institucionais e laboratórios de humanidades
 
 ---
 
-## 📁 Estrutura do projeto
-
-```
-sabia/
-├── data/
-│   ├── raw/                 # PDFs originais
-│   └── processed/           # Textos extraídos
-├── embeddings/
-│   └── chromadb/            # Banco vetorial
-├── models/
-│   └── llm/                 # Modelo .gguf local
-├── src/
-│   ├── load_data.py         # Pré-processamento dos PDFs
-│   ├── embed_data.py        # Geração de embeddings
-│   ├── build_chroma.py      # Criação do ChromaDB
-│   ├── query_rag.py         # Função principal de consulta
-│   └── utils.py             # Funções auxiliares
-├── app.py                   # Interface Streamlit
-├── requirements.txt
-├── README.md
-└── .env.example
-```
-
----
-
 ## 🚧 Em desenvolvimento
 
 - Suporte a mais formatos além de PDF
