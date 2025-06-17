@@ -14,8 +14,8 @@ Ideal para pesquisadores, arquivos institucionais e laboratórios de humanidades
 - 🧠 **Geração de respostas com IA**  
   Utiliza modelos de linguagem baseados em arquitetura LLaMA para responder perguntas de forma contextualizada.
 
-- 📊 **Banco vetorial com ChromaDB**  
-  Armazena embeddings gerados para recuperação semântica eficiente.
+- 📊 **Banco vetorial com FAISS**  
+  Armazena embeddings gerados para recuperação semântica eficiente usando FAISS localmente com cache de embeddings.
 
 - 💬 **Interface interativa com Streamlit**  
   Interface web leve e acessível para interação com o sistema.
@@ -29,7 +29,7 @@ Ideal para pesquisadores, arquivos institucionais e laboratórios de humanidades
 
 - Python 3.11+
 - [llama-cpp-python](https://github.com/abetlen/llama-cpp-python)
-- [ChromaDB](https://www.trychroma.com/)
+- [FAISS](https://github.com/facebookresearch/faiss)
 - [Sentence-Transformers](https://www.sbert.net/)
 - Streamlit
 
@@ -59,20 +59,12 @@ Ideal para pesquisadores, arquivos institucionais e laboratórios de humanidades
    Crie um arquivo `.env` com os seguintes parâmetros:
    ```
    MODEL_PATH=models/llm/model.gguf
-   CHROMA_DB_DIR=embeddings/chromadb
    DATA_PATH=data/processed
    ```
 
-5. **Adicione seus PDFs em `data/raw/`**
+5. **Adicione seus PDFs em `dataset`**
 
-6. **Execute o pipeline**
-   ```bash
-   python src/load_data.py
-   python src/embed_data.py
-   python src/build_chroma.py
-   ```
-
-7. **Inicie a interface**
+6. **Inicie a interface**
    ```bash
    streamlit run app.py
    ```
